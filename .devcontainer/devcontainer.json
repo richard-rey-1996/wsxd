@@ -1,5 +1,5 @@
 {
-  "name": "nova-path-35f848",
+  "name": "g2ray",
   "build": {
     "dockerfile": "Dockerfile",
     "context": "."
@@ -12,19 +12,18 @@
       "version": "latest"
     }
   },
-  "postStartCommand": "bash /usr/local/bin/start.sh",
-  "postAttachCommand": "gh codespace ports visibility 443:public -c $CODESPACE_NAME && show-link.sh",
+  "postAttachCommand": {
+    "expose": "gh codespace ports visibility 443:public -c $CODESPACE_NAME",
+    "start": "sudo /usr/local/bin/xray run -c /etc/xray/g2ray.json"
+  },
   "portsAttributes": {
     "443": {
-      "label": "nova-path-35f848",
+      "label": "g2ray",
       "protocol": "http",
-      "onAutoForward": "silent",
-      "visibility": "public"
+      "onAutoForward": "silent"
     }
   },
-  "forwardPorts": [
-    443
-  ],
+  "forwardPorts": [443],
   "hostRequirements": {
     "cpus": 2
   }

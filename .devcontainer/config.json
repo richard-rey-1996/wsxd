@@ -1,58 +1,27 @@
 {
   "log": {
-    "loglevel": "warning",
-    "access": "none",
-    "error": "/tmp/xray-error.log"
-  },
-  "dns": {
-    "servers": [
-      {
-        "address": "https://1.1.1.1/dns-query",
-        "domains": [
-          "geosite:geolocation-!cn"
-        ],
-        "queryStrategy": "UseIP"
-      },
-      "8.8.8.8",
-      "localhost"
-    ],
-    "queryStrategy": "UseIPv4"
+    "loglevel": "warning"
   },
   "inbounds": [
     {
       "tag": "vless-in",
       "port": 443,
-      "listen": "0.0.0.0",
       "protocol": "vless",
       "settings": {
         "clients": [
           {
-            "id": "443328b2-f648-42b5-a128-64abf9734ec0",
-            "flow": "",
-            "level": 0,
-            "email": "user@nova-path-35f848"
+            "id": "f303c789-4f18-4d97-b4d2-0f6223e52948",
+            "flow": ""
           }
         ],
         "decryption": "none"
       },
       "streamSettings": {
         "network": "xhttp",
-        "security": "none",
         "xhttpSettings": {
           "mode": "packet-up",
-          "path": "/",
-          "maxUploadSize": 1000000,
-          "maxConcurrentUploads": 10
+          "path": "/"
         }
-      },
-      "sniffing": {
-        "enabled": true,
-        "destOverride": [
-          "http",
-          "tls",
-          "quic"
-        ],
-        "routeOnly": false
       }
     }
   ],
@@ -60,55 +29,7 @@
     {
       "tag": "direct",
       "protocol": "freedom",
-      "settings": {
-        "domainStrategy": "UseIPv4"
-      }
-    },
-    {
-      "tag": "block",
-      "protocol": "blackhole",
-      "settings": {
-        "response": {
-          "type": "http"
-        }
-      }
+      "settings": {}
     }
-  ],
-  "routing": {
-    "domainStrategy": "IPIfNonMatch",
-    "rules": [
-      {
-        "type": "field",
-        "ip": [
-          "geoip:private"
-        ],
-        "outboundTag": "block"
-      },
-      {
-        "type": "field",
-        "protocol": [
-          "bittorrent"
-        ],
-        "outboundTag": "block"
-      },
-      {
-        "type": "field",
-        "domain": [
-          "geosite:category-ads-all"
-        ],
-        "outboundTag": "block"
-      }
-    ]
-  },
-  "policy": {
-    "levels": {
-      "0": {
-        "handshake": 4,
-        "connIdle": 300,
-        "uplinkOnly": 2,
-        "downlinkOnly": 5,
-        "bufferSize": 512
-      }
-    }
-  }
+  ]
 }
