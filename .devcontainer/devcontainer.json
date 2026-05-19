@@ -1,0 +1,31 @@
+{
+  "name": "nova-path-35f848",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+  "postStartCommand": "bash /usr/local/bin/start.sh",
+  "postAttachCommand": "show-link.sh",
+  "portsAttributes": {
+    "443": {
+      "label": "nova-path-35f848",
+      "protocol": "http",
+      "onAutoForward": "silent",
+      "visibility": "public"
+    }
+  },
+  "forwardPorts": [
+    443
+  ],
+  "hostRequirements": {
+    "cpus": 2
+  }
+}
