@@ -1,13 +1,16 @@
-#!/bin/sh
-set -e
-RELEASE="https://github.com/XTLS/Xray-core/releases/download/v26.3.27/Xray-linux-64.zip"
-TMPDIR="$(mktemp -d)"
-echo "[g2ray] Downloading Xray v26.3.27..."
-curl -sL "$RELEASE" -o "$TMPDIR/xray.zip"
-unzip -q "$TMPDIR/xray.zip" -d "$TMPDIR"
-install -m 755 "$TMPDIR/xray" /usr/local/bin/xray
-echo "[g2ray] Downloading GeoIP and GeoSite..."
-curl -sL "https://github.com/v2fly/geoip/releases/latest/download/geoip.dat" -o /usr/local/bin/geoip.dat
-curl -sL "https://github.com/v2fly/domain-list-community/releases/latest/download/dlc.dat" -o /usr/local/bin/geosite.dat
-rm -rf "$TMPDIR"
-echo "[g2ray] Done."
+#!/bin/bash
+# g2ray start script — keepalive: 180s
+tmux kill-session -t g2ray 2>/dev/null || true
+tmux new-session -d -s g2ray
+tmux send-keys -t g2ray "sudo /usr/local/bin/xray run -c /etc/xray/g2ray.json &>/tmp/xray.log" Enter
+sleep 2
+
+# Make port public
+gh codespace ports visibility 443:public -c $CODESPACE_NAME 2>/dev/null || true
+
+SELF_URL="https://${CODESPACE_NAME}-443.app.github.dev"
+tmux new-window -t g2ray -n keepalive
+tmux send-keys -t g2ray:keepalive "while true; do curl -sk --max-time 10 '${SELF_URL}/' -o /dev/null; sleep 180; done" Enter
+echo "[g2ray] Keepalive فعال است — هر 180 ثانیه self-ping"
+echo "[g2ray] سرور داخل tmux اجرا شد"
+echo "[g2ray] برای دیدن log: tmux attach -t g2ray"
